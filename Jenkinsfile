@@ -44,20 +44,30 @@ pipeline{
                 }
             }
         }
-        stage('static code anyalisy'){
+        stage('Static code analysis'){
 
             steps{
 
-                scripts{
+                script{
 
-                     withSonarQubeEnv(credentialsId: 'p1') {
- 
-                      sh 'mvn clean package sonar:sonar'
-                    
-                     }
+                    withSonarQubeEnv(credentialsId: 'p1') {
+
+                        sh 'mvn clean package sonar:sonar'
+                    }
+                   }
+
+                }
+            }
+            stage('Quality Gate Status'){
+
+                steps{
+
+                    script{
+
+                        waitForQualityGate abortPipeline: false, credentialsId: 'p1'
                     }
                 }
             }
-       }
-}
+        }
+
 
